@@ -1,0 +1,3 @@
+gcc -Wall -Wextra -Werror   -c -o srcs/main.o srcs/main.c
+gcc -Wall -Wextra -Werror   -c -o srcs/pipex.o srcs/pipex.c
+gcc -Wall -Wextra -Werror   -c -o srcs/pipex_utils.o srcs/pipex_utils.c

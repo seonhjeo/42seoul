@@ -1,0 +1,115 @@
+1. “#” : IO
+2. [ 1 ]?”>” : IO
+3. “” : IO
+5. [ 1]?”>>” : IO
+6. [ 1-2]”>&”[1-2 ] : IOR
+7. “|” : PIPE
+8. “&” : AMPERSAND
+9. [ ]”-“[a-zA-Z0-9]* : OPTION
+10. [ ]”–“[a-zA-Z=a-zA-Z]* : OPTION2
+11. \%\=\+\’\”\(\)\$\/\_\-\.\?\*\~a-zA-Z0-9]+ : WORD
+
+<pipeline> ::=		<cmd> 
+				|	<pipeline> '|' <cmd> 
+<cmd> ::=			<simple_cmd>
+				| 	<simple_cmd> <redirects>
+<simple_cmd> ::=	<file_path> 
+				| 	<argv>
+<argv> ::= 			<file_path> <args>
+<redirects> ::=		<io_redirect>
+				| 	<redirects> <io_redirect>
+<io_redirect> ::=	'<' <filename>
+				|	'<<' <filename>
+				|	'>' <filename>
+				|	'>>' <filename>
+<args> ::= 			WORD
+				|	<args> WORD
+<filename> ::= 		WORD
+<file_path> ::=		WORD
+
+
+해석 (^ 기호는 양쪽 자식 노드를 뜻한다. ^의 왼쪽이 왼쪽 자식 노드, ^의 오른쪽이 오른쪽 자식 노드이다.)
+
+pipeline은 cmd 혹은 cmd^pipeline를 가질 수 있다.
+pipeline은 명령어의 집합인 cmd와 자기 자신인 pipeline을 자식 노드로 가질 수 있다.
+pipeline은 기호 '|', '||' 등을 뜻한다.
+
+cmd는 simple_cmd 혹은 redirects^simple_cmd를 가질 수 있다.
+cmd는 실행 파일, 플래그, 실행 대상이 들어간 simple_cmd와 '<<'등의 리디렉트 기호에 리디렉트 대상이 포함된 redirects를 자식 노드로 가질 수 있다.
+
+simple_cmd는 file_path^argv를 가질 수 있다.
+simple_cmd는 실행 파일이 들어간 file_path, 실행 파일, 플래그, 실행 대상이 들어간 argv를 자식 노드로 가질 수 있다.
+
+argv는 file_path^args를 가진다.
+argv는 실행 파일이 들어간 file_path, 실행 파일, 플래그, 실행 대상이 들어간 args를 자식 노드로 가질 수 있다.
+argv는 execve함수의 입력인자인 argv로 사용될 수 있다.
+
+redirects는 io_redirect 혹은 redirects^io_redirect를 가질 수 있다.
+redirects는 '<<', '>>'등을 포함하는 io_redirects와 자기 자신을 자식 노드로 가질 수 있다.
+
+io_redirects는 리디렉션 기호와 filename를 가질 수 있다.
+io_redirects는 리디렉션 기호와 그 기호의 목표인 파일 이름을 인자로 가질 수 있다.
+리디렉션 기호는 '<<', '>>', '<', '>' 등을 뜻한다.
+
+args는 문자열의 집합이다.
+
+filename과 file_path 는 문자열이다.
+
+
+출처: https://epicarts.tistory.com/163 [일상 생활]
+
+
+# define L_PIPE 10			/* 명령어(11)과 파이프(10)의 집합 */
+# define L_CMD 11			/* 명령어(12)와 리디렉트(14)의 집합 */
+# define L_SIMPLE_CMD 12	/* 명령어(19 + 13)의 집합 */
+# define L_ARGV 13			/* execve의 argv[] 인자에 들어갈 명령어(명령어 경로(19) + 명령어 문자열(17)))의 집합 */
+# define L_REDIR 14			/* 리디렉트(15)와 리디렉트(14)의 집합 */
+# define L_IO_REDIR 15		/* 리디렉트 기호(16)와 리디렉트 대상 파일이름(18)의 모임 */
+# define L_REDIR_TK 16		/* 리디렉트 기호 */
+# define L_ARGS 17			/* 명령어 문자열의 집합 */
+# define L_RFNAME 18		/* 리디렉트 대상 파일 이름 문자열 */
+# define L_FPATH 19			/* 명령어 경로 문자열 */
+
+
+문법에 따른 트리 만들기.
+
+int trigger, t_tree *buff필요, t_tree *pipe.
+
+ - 처음, 혹은 트리거가 L_PIPE가 아닌 상태에서 L_PIPE 만날 시
+	1. L_PIPE 노드를 만든다.
+	2. L_PIPE 노드의 왼쪽에 빈 L_CMD 노드를, 오른쪽에 빈 L_PIPE 노드를 만든다.
+	3. 만들어진 트리를 pipe에 저장된 주소에 치환한다. 만일 pipe에 저장되지 않았으면 전체 트리의 헤드를 만들어진 트리로 한다.
+	4. 트리거를 초기화한다.
+	5. buff에 L_CMD노드의 주소를 저장해 추후에 나올 수 있는 명령을 준비한다.
+	6. pipe에 L_PIPE 노드를 만들어 추후에 나올 수 있는 PIPE를 준비한다.
+
+ - 트리거가 초기화인 상태에서 이후 L_FPATH만날 시
+	1. L_FPATH를 만나면 L_FPATH를 포함하여 L_REDIR_TK 혹은 L_PIPE를 만날 때까지 나오는 모든 문자열을 L_ARGS로 만든다.
+	2. L_FPATH를 왼쪽 노드로, 만들어진 L_ARGS를 오른쪽 노드로 가지는 L_SIMPLE_CMD 트리를 만든다.
+	3. 빈 L_REDIR을 왼쪽 노드로, L_SIMPLE_CMD를 오른쪽 노드로 가지는 L_CMD 트리를 만든다.
+	4. buff에 저장된 L_CMD 노드의 주소를 만든 노드로 치환한다.
+	4. 트리거를 L_FPATH로 변경해 이전에 만든 노드가 L_FPATH라는 것을 저장한다.
+	5. buff에 L_REDIR의 주소를 저장해 추후 나올 리디렉트를 준비한다.
+
+ - 트리거가 L_FPATH인 상태에서 L_REDIR_TK만날 시
+	1. L_REDIR_TK를 만나면 다음 L_REDIR_TK 혹은 L_PIPE를 만날 때까지 나오는 모든 문자열을 L_RFNAME으로 만든다.
+	2. L_REDIR_TK를 왼쪽 노드로, L_RFNAME을 오른쪽 노드로 가지는 L_IO_REDIR 트리를 만든다.
+	3. L_IO_REDIR를 왼쪽 노드로, 빈 L_REDIR을 오른쪽 노드로 가지는 L_REDIR트리를 만든다.
+	4. buff에 저장된 L_REDIR의 주소를 만든 노드로 치환한다.
+	5. 트리거를 L_REDIR_TK로 변경해 이전에 만든 노드가 L_REDIR_TK라는 것을 저장한다.
+	6. L_REDIR의 주소를 저장하여 추후에 나올 수 있는 리디렉트를 준비한다.
+
+ - 트리거가 L_REDIR_TK인 상태에서 L_REDIR_TK만날 시
+	1. L_REDIR_TK를 만나면 다음 L_REDIR_TK 혹은 L_PIPE를 만날 때까지 나오는 모든 문자열을 L_RFNAME으로 만든다.
+	2. L_REDIR_TK를 왼쪽 노드로, L_RFNAME을 오른쪽 노드로 가지는 L_IO_REDIR 트리를 만든다.
+	3. L_IO_REDIR를 왼쪽 노드로, 빈 L_REDIR을 오른쪽 노드로 가지는 L_REDIR트리를 만든다.
+	4. buff에 저장된 L_REDIR의 주소를 만든 노드로 치환한다.
+	5. 트리거를 L_REDIR_TK로 변경해 이전에 만든 노드가 L_REDIR_TK라는 것을 저장한다.
+	6. L_REDIR의 주소를 저장하여 추후에 나올 수 있는 리디렉트를 준비한다.
+
+ - 트리거가 초기화인 상태에서 L_REDIR_TK만날 시
+
+
+ - 트리거가 초기화인 상태에서 L_PIPE만날 시
+	1. 파싱 오류이므로 종료한다.
+

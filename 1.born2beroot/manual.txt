@@ -1,0 +1,136 @@
+참고 자료 : https://tbonelee.tistory.com/m/16
+
+
+1. VM세팅
+
+리눅스, 데비안-64 -> 램 1gb -> vdf생성 -> VDI -> 동적 할당 -> 저장소 8gb
+설정 -> 저장소 -> IDE -> cd -> 다운로드 받은 데비안 이미지 파일 설정
+
+
+2. 데비안 설치
+
+설치(그래픽 설치 X) -> 언어 영어 선택 -> 국가 대한민국 선택 -> 키보드 입력 미영어 선택
+호스트 네임 설정('인트라id' + 42) -> 도메인 네임 공백 -> 루트 패스워드 설정 및 확인
+풀네임 설정 및 유저 네임 설정 -> 유저 암호 설정 및 확인 -> 타임존 설정
+
+2-1. 파티션 설정
+
+encrypted LVM모드 설정 -> 하드 선택 -> separate/home partition -> yes 선택
+LVM encryption 암호 설정 및 확인 -> 8.1gb 할당 -> 파티션 종료 및 변경점 적용 선택
+
+2-2. 이미지 파일
+
+다른 파일 스캔 no 선택 -> 미러 컨트리 설정(한국) -> 미러 사이트 설정(dev.debian.org)
+프록시 정보 공백 -> 패키지 사용 조사 no 선택 -> 소프트웨어 선택 (SSH server, standard system utilities만)
+GRUB 부트로더 설치 no 선택 -> 부트 로더 위치 /dev/sda 선택
+
+
+3. 머신 설정
+
+3-1. sudo 설치 및 유저 그룹 추가
+
+1) 'su -' -> 루트 암호 입력 -> 'apt install sudo'
+2) 'adduser <유저이름> sudo] (이 때 루트 폴더에 있어야 함)
+3) 'sudo reboot' (이후 재로그인)
+4) 'sudo -v' -> 패스워드 입력
+5) 'sudo addgroup user42'
+6) 'sudo adduser <유저이름> user42'
+7) 'sudo apt update'
+
+3-1-1. vim 설치
+
+1) 'sudo apt-get install vim'
+
+3-2. SSH 설치
+
+1) 'sudo apt install openssh-server'
+2) 'sudo vim /etc/ssh/sshd_config' -> "#Port22"를 "Port4242"로,
+"#PermitRootLogin prohibit-password"를 "PermitRootLogin no" 로 변경 후 저장 및 종료
+3) 'sudo vim /etc/ssh/ssh_config' -> "#Port22"를 "Port4242"로 변경
+4) 'sudo service ssh status'를 입력 시 active상태가 떠 있으면 성공
+
+3-3. UFW 설치
+
+1) 'sudo apt install ufw'
+2) 'sudo ufw enable'
+3) 'sudo ufw allow 4242'
+4) 'sudo ufw status'를 입력 시 4242와 4242(v6)포트가 허용 및 활성화되어야 한다.
+
+3-4. sudo 설정
+
+1) 'sudo touch /etc/sudoers.d/sudoconfig'
+2) 'sudo mkdir /var/log/sudo' (sudo 로그 파일)
+3) 'sudo vim /etc/sudoers' 이후 다음 문장들 입력
+
+************************************************************
+* Defaults      passwd_tries=3                             *
+* Defaults      badpass_message="Incorrect password"       * <- 원하는 메세지 입력 가능
+* Defaults      log_input,log_output                       *
+* Defaults      iolog_dir="/var/log/sudo"                  *
+* Defaults      requiretty                                 *
+* Defaults      secure_path="that/long/paths/from/subject" *
+************************************************************
+
+3-5. 강력한 패스워드 정책 설정
+
+1) 'sudo vim /etc/login.defs'이후 다음 문장 변경
+*************************************************
+* PASS_MAX_DAYS    99999 -> PASS_MAX_DAYS    30 *
+* PASS_MIN_DAYS    0     -> PASS_MIN_DAYS    2  *
+*************************************************
+(PASS_WARN_AGE)는 기본적으로 7일이므로 건드릴 필요 없음
+
+2) 'sudo apt install libpam-pwquality'
+3) 'sudo vim /etc/pam.d/common-password'
+4) "password requisite pam_pwqiality.so retry=3"문장 뒤에 다음 문장 추가
+****************************************************************************************
+* minlen=10 ucredit=-1 dcredit=-1 maxrepeat=3 reject_username difok=7 enforce_for_root *
+****************************************************************************************
+최종적으로 다음 문장이 되어야 함 :
+"password requisite pam_pwqiality.so retry=3 minlen=10 ucredit=-1 dcredit=-1 maxrepeat=3 reject_username difok=7 enforce_for_root"
+
+5) 새 정책에 맞게 패스워드 변경
+***************
+* 'passwd'      * <- 유저 패스워드 변경
+* 'sudo passwd' * <- 루트 패스워드 변경
+***************
+
+
+4. monitoring.sh를 위한 도구 설치
+
+1) 'sudo apt install net-tools'
+2) 'chmod +x monitoring.sh'로 권한 부여
+
+
+-----------------------------------------------------------------------------------------
+
+1. UFW, SSH, cron 동작 확인
+
+'service 프로그램 status'
+
+2. 유저 추가 (루트 계정에서만)
+
+'sudo adduser 유저이름'
+'sudo reboot'
+'sudo -v'
+'sudo addgroup user42'
+'sudo adduser <유저이름> user42'
+
+3. 호스트네임 확인 및 변경
+
+'hostname' - 머신 호스트네임 표시
+'sudo vim /etc/hostname'에서 새 이름으로 변경
+'sudo vim /etc/hosts'에서 새 이름으로 변경
+'sudo reboot'
+
+4. UFW 확인 및 추가
+
+'sudo ufw status' - ufw 상태 조회
+'sudo ufw allow 8080' - 8080포트 추가
+'sudo ufw delete 8080' - 8080포트 삭제
+'sudo ufw enable/disable' - ufw 활성/비활성
+
+5. SSH 확인
+
+'sudo service ssh status' - ssh 상태 확인
+'vim /etc/ssh/sshd_config'로 접속 포트 확인

@@ -1,0 +1,7 @@
+README.md
+assets
+config.vars
+man
+outs
+run.sh
+scripts

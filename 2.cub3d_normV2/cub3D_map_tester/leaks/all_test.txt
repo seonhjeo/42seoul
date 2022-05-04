@@ -1,0 +1,96 @@
+
+[46;30mtest_R1.cub[m
+
+otal heap usage: 1,771 allocs, 491 frees, 2,734,132 bytes allocated
+
+[46;30mtest_R2.cub[m
+
+otal heap usage: 1,106 allocs, 232 frees, 2,598,327 bytes allocated
+
+[46;30mtest_R3.cub[m
+
+otal heap usage: 1,770 allocs, 490 frees, 2,734,391 bytes allocated
+
+[46;30mtest_R4.cub[m
+
+otal heap usage: 1,766 allocs, 486 frees, 2,734,413 bytes allocated
+
+[46;30mtest_R5.cub[m
+
+otal heap usage: 1,770 allocs, 490 frees, 2,734,189 bytes allocated
+
+[46;30mtest_R6.cub[m
+
+otal heap usage: 1,760 allocs, 482 frees, 2,732,785 bytes allocated
+
+[46;30mtest_R7.cub[m
+
+otal heap usage: 1,780 allocs, 498 frees, 2,736,003 bytes allocated
+
+[46;30mtest_R8.cub[m
+
+otal heap usage: 1,105 allocs, 232 frees, 2,598,410 bytes allocated
+
+[46;30mtest_W1.cub[m
+
+otal heap usage: 1,769 allocs, 490 frees, 2,734,379 bytes allocated
+
+[46;30mtest_W2.cub[m
+
+otal heap usage: 1,780 allocs, 497 frees, 2,735,575 bytes allocated
+
+[46;30mtest_W3.cub[m
+
+otal heap usage: 1,771 allocs, 491 frees, 2,734,215 bytes allocated
+
+[46;30mtest_W4.cub[m
+
+otal heap usage: 1,770 allocs, 490 frees, 2,734,458 bytes allocated
+
+[46;30mtest_W5.cub[m
+
+otal heap usage: 1,766 allocs, 487 frees, 2,734,397 bytes allocated
+
+[46;30mtest_W6.cub[m
+
+otal heap usage: 1,760 allocs, 483 frees, 2,733,345 bytes allocated
+
+[46;30mtest_W7.cub[m
+
+otal heap usage: 1,120 allocs, 243 frees, 2,599,029 bytes allocated
+
+[46;30mtest_FC1.cub[m
+
+otal heap usage: 1,770 allocs, 490 frees, 2,734,415 bytes allocated
+
+[46;30mtest_FC2.cub[m
+
+otal heap usage: 1,770 allocs, 490 frees, 2,734,374 bytes allocated
+
+[46;30mtest_FC3.cub[m
+
+otal heap usage: 1,770 allocs, 490 frees, 2,734,374 bytes allocated
+
+[46;30mtest_FC4.cub[m
+
+otal heap usage: 1,770 allocs, 490 frees, 2,734,374 bytes allocated
+
+[46;30mtest_FC5.cub[m
+
+otal heap usage: 1,771 allocs, 490 frees, 2,734,225 bytes allocated
+
+[46;30mtest_FC6.cub[m
+
+otal heap usage: 1,783 allocs, 494 frees, 2,735,737 bytes allocated
+
+[46;30mtest_FC7.cub[m
+
+otal heap usage: 1,757 allocs, 486 frees, 2,733,019 bytes allocated
+
+[46;30mtest_FC8.cub[m
+
+otal heap usage: 1,763 allocs, 490 frees, 2,734,287 bytes allocated
+
+[46;30mtest_FC9.cub[m
+
+otal heap usage: 1,763 allocs, 490 frees, 2,734,459 bytes allocated
