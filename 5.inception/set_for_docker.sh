@@ -33,4 +33,7 @@ usermod -aG docker ${USER}
 sudo gpasswd -a $USER docker
 newgrp docker
 
+mkdir ~/data
+mkdir ~/data/wordpress ~/data/mariadb
+
 echo  "\033[44;33m@@@It's set up for docker@@@\033[0m\n\n"

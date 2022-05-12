@@ -3,7 +3,7 @@ NAME = inception
 all: clean setup build
 
 setup:
-	cd ./srcs/requirements/tools && sudo bash pre_work.sh
+	cd ./srcs/requirements/tools && sudo bash set_for_docker.sh
 
 build:
 	cd ./srcs/ && docker-compose up --build ;
