@@ -23,4 +23,7 @@ apt-get install docker-compose
 
 usermod -aG docker ${USER}
 
+sudo gpasswd -a $USER docker
+newgrp docker
+
 echo  "\033[44;33m@@@It's set up for docker@@@\033[0m\n\n"
