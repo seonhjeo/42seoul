@@ -1,17 +1,23 @@
-all: 
-	@docker-compose -f ./srcs/docker-compose.yml up
+NAME = inception
 
-down:
-	@docker-compose -f ./srcs/docker-compose.yml down
+all: clean setup build
 
-re:
-	@docker-compose -f srcs/docker-compose.yml up --build
+setup:
+	cd ./srcs/requirements/tools && sudo bash pre_work.sh
 
-clean:
-	@docker stop $$(docker ps -qa);\
-	docker rm $$(docker ps -qa);\
-	docker rmi -f $$(docker images -qa);\
-	docker volume rm $$(docker volume ls -q);\
-	docker network rm $$(docker network ls -q);\
+build:
+	cd ./srcs/ && docker-compose up --build ;
 
-.PHONY: all re down clean
+stop:
+	cd ./srcs/ && docker-compose down;
+
+volrm:
+	cd ./srcs/ && docker volume prune;
+
+clean: stop
+	cd ./srcs/ && docker system prune -a;
+
+fclean: clean
+	sudo rm -rf ~/data/;
+
+.PHONY: setup build stop volrm clean fclean all
