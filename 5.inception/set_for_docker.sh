@@ -17,9 +17,16 @@ add-apt-repository \
    $(lsb_release -cs) \
    stable"
 
-apt-get update && sudo apt-get install docker-ce docker-ce-cli containerd.iodocker run hello-world
+apt-get update
 
-apt-get install docker-compose
+sudo apt-get vim make
+
+sudo apt-get install docker-ce docker-ce-cli containerd.iodocker run hello-world
+
+VERSION=$(curl --silent https://api.github.com/repos/docker/compose/releases/latest | jq .name -r)
+DESTINATION=/usr/local/bin/docker-compose
+sudo curl -L https://github.com/docker/compose/releases/download/${VERSION}/docker-compose-$(uname -s)-$(uname -m) -o $DESTINATION
+sudo chmod 755 $DESTINATION
 
 usermod -aG docker ${USER}
 
