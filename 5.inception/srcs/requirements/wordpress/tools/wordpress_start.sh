@@ -13,7 +13,7 @@ if [ ! -f /var/www/html/wp-config.php ]; then
 	chmod +x wp-cli.phar;
 	mv wp-cli.phar /usr/local/bin/wp;
 	cd /var/www/html;
-	wp core download --allow-root --locale=ko_KR;
+	wp core download --locale=ko_KR --version=5.9.1;
 	mv /var/www/wp-config.php /var/www/html/
 	echo "Wordpress: creating users..."
 	wp core install --allow-root --url=${WP_URL} --title=${WP_TITLE} --admin_user=${WP_ADMIN_LOGIN} --admin_password=${WP_ADMIN_PASSWORD} --admin_email=${WP_ADMIN_EMAIL}
