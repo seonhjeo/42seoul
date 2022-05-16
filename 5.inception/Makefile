@@ -1,5 +1,4 @@
-all:
-	clean setup up
+all: setup up
 up:
 	@docker-compose -f ./srcs/docker-compose.yml up
 
@@ -19,5 +18,8 @@ clean:
 	docker volume rm $$(docker volume ls -q);\
 	docker network rm $$(docker network ls -q);\
 	docker system prune -a;
+
+fclean: clean
+	sudo rm -rf ~/data/
 
 .PHONY: all re up setup down clean

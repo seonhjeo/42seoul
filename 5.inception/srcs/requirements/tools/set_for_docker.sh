@@ -1,4 +1,11 @@
+#!/bin/bash
+
 echo "\033[47;35m--Setting for docker--\033[0m\n"
+
+sudo mkdir ~/data
+sudo mkdir ~/data/wordpress
+sudo mkdir ~/data/mariadb
+sudo chmod -R 777 ~/data/
 
 apt-get remove docker docker-engine docker.io containerd runc
 
@@ -32,9 +39,5 @@ usermod -aG docker ${USER}
 
 sudo gpasswd -a $USER docker
 newgrp docker
-
-mkdir ~/data
-mkdir ~/data/wordpress
-mkdir ~/data/mariadb
 
 echo  "\033[44;33m@@@It's set up for docker@@@\033[0m\n\n"

@@ -1,7 +1,8 @@
 FROM debian:buster
 
 RUN apt-get update
-RUN apt-get -y install php7.3 php-mysqli php-fpm wget sendmail
+RUN apt-get upgrade
+RUN apt-get -y install php7.3 php-mysqli php-fpm php-cli wget curl sendmail php-mysql php-mbstring php-xml
 
 EXPOSE 9000
 
