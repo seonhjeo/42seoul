@@ -1,15 +1,19 @@
-FROM debian:buster
+FROM alpine:3.13
 
-RUN apt-get update
-RUN apt-get install -y nginx openssl
+RUN	apk update && apk upgrade && apk add --no-cache \
+        nginx \
+        openssl
 
-EXPOSE 443
+# nginx SSL
+RUN mkdir /etc/nginx/ssl
+RUN openssl req -newkey rsa:4096 -x509 -sha256 -days 365 -nodes \
+        -out /etc/nginx/ssl/seonhjeo.pem \
+        -keyout /etc/nginx/ssl/seonhjeo.key \
+        -subj "/C=IT/ST=Seoul/L=Seoul/O=42 School/OU=seonhjeo/CN=seonhjeo/"
 
-COPY ./conf/default /etc/nginx/sites-enabled/default
-COPY ./tools/nginx_start.sh /var/www
+# nginx config
+RUN mkdir -p /run/nginx
+COPY conf/nginx.conf /etc/nginx/conf.d/default.conf
 
-RUN chmod +x /var/www/nginx_start.sh
-
-ENTRYPOINT [ "var/www/nginx_start.sh" ]
-
-CMD ["nginx", "-g", "daemon off;"]
+# Start nginx
+ENTRYPOINT ["nginx", "-g", "daemon off;"]

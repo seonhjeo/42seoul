@@ -1,60 +1,63 @@
-version: "3.5"
-
-networks:
-  app-network:
-    name: app-network
-    driver: bridge
-
-volumes:
-  wp:
-    driver: local
-    name: wp
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/seonhjeo/data/wordpress
-  db:
-    driver: local
-    name: db
-    driver_opts:
-      type: none
-      o: bind
-      device: /home/seonhjeo/data/mariadb
-
+version: '3'
 services:
-  mariadb:
-    container_name: mariadb
-    build: ./requirements/mariadb
-    env_file:
-      - .env
-    volumes:
-      - db:/var/lib/mysql
-    networks:
-      - app-network
-    restart: unless-stopped
-
-  wordpress:
-    container_name: wordpress
-    build: ./requirements/wordpress
-    env_file:
-      - .env
-    depends_on:
-      - mariadb
-    volumes:
-      - wp:/var/www/html
-    networks:
-      - app-network
-    restart: unless-stopped
 
   nginx:
+    build: requirements/nginx/
     container_name: nginx
-    build: ./requirements/nginx
     ports:
+      - "80:80"
       - "443:443"
+    volumes:
+      - "~/Desktop/inception/website:/var/www/html"
     depends_on:
       - wordpress
-    volumes:
-      - wp:/var/www/html
     networks:
-      - app-network
-    restart: unless-stopped
+      - frontend
+    restart: always
+
+  wordpress:
+    build: requirements/wordpress/
+    container_name: wordpress
+    ports:
+      - "9000:9000"
+    volumes:
+      - "~/Desktop/inception/website:/var/www/html"
+    depends_on:
+      - mariadb
+    networks:
+      - frontend
+      - backend
+    restart: always
+    environment:
+      MYSQL_HOST:       ${MYSQL_HOST}
+      WP_DATABASE_NAME: ${WP_DATABASE_NAME}
+      WP_DATABASE_USR:  ${WP_DATABASE_USR}
+      WP_DATABASE_PWD:  ${WP_DATABASE_PWD}
+      DOMAIN_NAME:      ${DOMAIN_NAME}
+      WP_TITLE:         ${WP_TITLE}
+      WP_ADMIN_USR:     ${WP_ADMIN_USR}
+      WP_ADMIN_PWD:     ${WP_ADMIN_PWD}
+      WP_ADMIN_EMAIL:   ${WP_ADMIN_EMAIL}
+      WP_USR:           ${WP_USR}
+      WP_PWD:           ${WP_PWD}
+      WP_EMAIL:         ${WP_EMAIL}
+
+  mariadb:
+    build: requirements/mariadb/
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    volumes:
+      - "~/Desktop/inception/mariadb:/var/lib/mysql"
+    networks:
+      - backend
+    restart: always
+    environment:
+      MYSQL_ROOT_PWD:   ${MYSQL_ROOT_PWD}
+      WP_DATABASE_NAME: ${WP_DATABASE_NAME}
+      WP_DATABASE_USR:  ${WP_DATABASE_USR}
+      WP_DATABASE_PWD:  ${WP_DATABASE_PWD}
+
+networks:
+  frontend:
+  backend:

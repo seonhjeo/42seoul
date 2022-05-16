@@ -7,31 +7,32 @@ sudo mkdir ~/data/wordpress
 sudo mkdir ~/data/mariadb
 sudo chmod -R 777 ~/data/
 
-apt-get remove docker docker-engine docker.io containerd runc
+sudo apt-get remove docker docker-engine docker.io containerd runc
 
-apt-get update
-apt-get install \
+sudo apt-get update
+sudo apt-get install \
     apt-transport-https \
     ca-certificates \
     curl \
     gnupg-agent \
     software-properties-common
 
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -apt-key fingerprint 0EBFCD88
+sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+sudo apt-key fingerprint 0EBFCD88
 
-add-apt-repository \
+sudo add-apt-repository \
    "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
    $(lsb_release -cs) \
    stable"
 
-apt-get update
+sudo apt-get update
+sudo apt-get install vim make
+sudo apt-get install docker-ce docker-ce-cli containerd.io
+docker run hello-world
 
-sudo apt-get vim make
-
-sudo apt-get install docker-ce docker-ce-cli containerd.iodocker run hello-world
-
+sudo apt install jq
 VERSION=$(curl --silent https://api.github.com/repos/docker/compose/releases/latest | jq .name -r)
-DESTINATION=/usr/local/bin/docker-compose
+DESTINATION=/usr/bin/docker-compose
 sudo curl -L https://github.com/docker/compose/releases/download/${VERSION}/docker-compose-$(uname -s)-$(uname -m) -o $DESTINATION
 sudo chmod 755 $DESTINATION
 
