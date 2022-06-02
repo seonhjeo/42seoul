@@ -105,3 +105,6 @@
 ## Chapter 16 C++의 형 변환 연산자와 맺는 글
 #### 16-1 C++에서의 형 변환 연산
 #### 16-2 ‘윤성우의 열혈 C++ 프로그래밍’을 맺는 글
+
+## 추가적인 문서들
+ - effective c++ 정리본 : https://m.blog.naver.com/PostView.naver?isHttpsRedirect=true&blogId=likeme96&logNo=220695021993
