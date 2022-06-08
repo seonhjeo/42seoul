@@ -6,7 +6,7 @@
 /*   By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 14:10:33 by seonhjeo          #+#    #+#             */
-/*   Updated: 2022/06/03 17:23:19 by seonhjeo         ###   ########.fr       */
+/*   Updated: 2022/06/07 18:14:58 by seonhjeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define FT_TRAITS_HPP
 
 # include <cstddef>
+# include <iostream>
 
 namespace ft
 {
@@ -126,7 +127,7 @@ template < class T >
 struct iterator_traits< T* > {
 	typedef random_access_iterator_tag	iterator_category;
 	typedef T							value_type;
-	typedef std::ptrdiff_t				difference_type;
+	typedef ptrdiff_t					difference_type;
 	typedef T*							pointer;
 	typedef T&							reference;
 };
@@ -135,7 +136,7 @@ template < class T >
 struct iterator_traits< T* const > {
 	typedef random_access_iterator_tag	iterator_category;
 	typedef T							value_type;
-	typedef std::ptrdiff_t				difference_type;
+	typedef ptrdiff_t					difference_type;
 	typedef const T*					pointer;
 	typedef const T&					reference;
 };

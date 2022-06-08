@@ -44,3 +44,7 @@
 ## nullptr
  - https://stackoverflow.com/questions/61283569/how-does-c-nullptr-implementation-work
  - https://stackoverflow.com/questions/13675203/implementation-safe-nullptr
+
+
+## predicate
+ - https://stackoverflow.com/questions/7372132/c-stl-sort-function-binary-predicate

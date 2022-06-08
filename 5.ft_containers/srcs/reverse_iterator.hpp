@@ -6,7 +6,7 @@
 /*   By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:51:17 by seonhjeo          #+#    #+#             */
-/*   Updated: 2022/06/06 17:58:04 by seonhjeo         ###   ########.fr       */
+/*   Updated: 2022/06/07 18:37:31 by seonhjeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,27 +40,26 @@ protected:
 
 public:
 	// default constructor
-	reverse_iterator() : current() {};
+	reverse_iterator() : current()
+	{};
 
 	// init constructor
-	reverse_iterator(iterator_type it) : current(it) {};
+	reverse_iterator(iterator_type it) : current(it)
+	{};
 
 	// copy/typecast constructor
 	template < class Iter >
-	reverse_iterator(const reverse_iterator<Iter>& it) : current(it.base()) {};
+	reverse_iterator(const reverse_iterator<Iter>& it) : current(it.base())
+	{};
 
 	// destructor
-	virtual ~reverse_iterator() {};
-
-	// copy operator overloading
-	reverse_iterator &operator=(const reverse_iterator<Iter> &it)
-	{
-		this->current = it.base();
-		return (*this);
-	};
+	virtual ~reverse_iterator()
+	{};
 
 	// return a copy of the base iterator
-	iterator_type base() const { return (current); };
+	iterator_type base() const {
+		return (current);
+	};
 
 	// return bast iterator that casted to <const Iterator>
 	operator reverse_iterator< const Iterator >() const {
@@ -70,18 +69,22 @@ public:
 
 	/* pointer operator overloading */
 	reference operator*() const {
-		iterator_type temp = this->current;
-		return (*(--temp));
+		iterator_type temp = current;
+		return *(--temp);
 	};
 
-	pointer operator->() const { return &(operator*()); };
+	pointer operator->() const {
+		return &(operator*());
+	};
 
-	reference operator[](difference_type n) const { return (current[-n - 1]); };
+	reference operator[](difference_type n) const {
+		return (current[-n - 1]);
+	};
 
 
 	/* arithmatic operator overloading */
 	// member function
-	reverse_iterator operator+(different_type n) {
+	reverse_iterator operator+(difference_type n) {
 		return (reverse_iterator(current - n));
 	};
 
@@ -91,7 +94,7 @@ public:
 	};
 
 	reverse_iterator operator++(int) {
-		reverse_iterator tmp = *this;
+		reverse_iterator tmp(*this);
 		--current;
 		return (tmp);
 	};
@@ -110,10 +113,10 @@ public:
 		return (*this);
 	}
 
-	reverse_iterator& operator--(int) {
-		reverse_iterator tmp = *this;
+	reverse_iterator operator--(int) {
+		reverse_iterator tmp(*this);
 		++current;
-		return (this);
+		return (tmp);
 	}
 
 	reverse_iterator operator-=(difference_type n) {
@@ -170,7 +173,7 @@ template < class Iterator >
 reverse_iterator< Iterator > operator+(
 	typename reverse_iterator< Iterator >::difference_type n,
 	const reverse_iterator< Iterator >& rev_it) {
-  return (rev_it + n);
+  return (reverse_iterator< Iterator >(rev_it.base() - n));
 };
 
 template < class Iterator1, class Iterator2 >
