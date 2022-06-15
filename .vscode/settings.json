@@ -68,6 +68,14 @@
 		"fstream": "cpp",
 		"stack": "cpp",
 		"*.tpp": "cpp",
-		"list": "cpp"
+		"list": "cpp",
+		"__tree": "cpp",
+		"filesystem": "cpp",
+		"map": "cpp",
+		"set": "cpp",
+		"memory_resource": "cpp",
+		"queue": "cpp",
+		"__functional_03": "cpp",
+		"__functional_base_03": "cpp"
 	}
 }

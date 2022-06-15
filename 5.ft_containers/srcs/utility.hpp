@@ -6,7 +6,7 @@
 /*   By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:31:45 by seonhjeo          #+#    #+#             */
-/*   Updated: 2022/06/08 13:06:58 by seonhjeo         ###   ########.fr       */
+/*   Updated: 2022/06/14 15:31:10 by seonhjeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,12 @@ bool operator>=(const pair< T1, T2 >& lhs, const pair< T1, T2 >& rhs) {
   return !(lhs < rhs);
 }
 
+/* make_pair */
+// Creates a std::pair object, deducing the target type from the types of arguments.
+template < class T1, class T2 >
+pair< T1, T2 > make_pair(T1 x, T2 y) {
+	return (pair< T1, T2 >(x, y));
+}
 
 /* swap for specialization */
 template < class T >
@@ -140,13 +146,6 @@ void swap(T& a, T& b) {
 	T c(a);
 	a = b;
 	b = c;
-}
-
-/* make_pair */
-// Creates a std::pair object, deducing the target type from the types of arguments.
-template < class T1, class T2 >
-pair< T1, T2 > make_pair(T1 x, T2 y) {
-	return (pair< T1, T2 >(x, y));
 }
 
 /* equal */

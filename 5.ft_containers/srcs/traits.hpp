@@ -6,7 +6,7 @@
 /*   By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 14:10:33 by seonhjeo          #+#    #+#             */
-/*   Updated: 2022/06/07 18:14:58 by seonhjeo         ###   ########.fr       */
+/*   Updated: 2022/06/10 15:30:08 by seonhjeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,9 @@
 namespace ft
 {
 
+template <class>
+struct check_type { typedef void type; };
+
 /* enable if */
 // If B is true, std::enable_if has a public member typedef type, equal to T;
 // otherwise, there is no member typedef.
@@ -29,6 +32,24 @@ template < class T >
 struct enable_if< true, T > {
 	typedef T type;
 };
+
+/* is_same */
+template <class T, class U>
+struct is_same { static const bool value = false; };
+
+template <class T>
+struct is_same<T, T> { static const bool value = true; };
+
+/* conditional */
+template <bool B, class T = void, class U = void>
+struct conditional {};
+
+template <class T, class U>
+struct conditional<true, T, U> { typedef T type; };
+
+template <class T, class U>
+struct conditional<false, T, U> { typedef U type; };
+
 
 /* integral_constant */
 // std::integral_constant wraps a static constant of specified type. It is the base class for the C++ type traits.

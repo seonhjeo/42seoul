@@ -6,7 +6,7 @@
 /*   By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/03 16:55:58 by seonhjeo          #+#    #+#             */
-/*   Updated: 2022/06/06 18:00:03 by seonhjeo         ###   ########.fr       */
+/*   Updated: 2022/06/09 16:11:58 by seonhjeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ public:
 	{};
 
 	bidirectional_iterator &operator=(const bidirectional_iterator& other) {
-		this._ptr = other.base();
+		this->_ptr = other.base();
 		return (*this);
 	}
 
