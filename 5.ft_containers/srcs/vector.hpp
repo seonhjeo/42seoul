@@ -6,7 +6,7 @@
 /*   By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/07 15:59:05 by seonhjeo          #+#    #+#             */
-/*   Updated: 2022/06/14 12:05:25 by seonhjeo         ###   ########.fr       */
+/*   Updated: 2022/06/16 18:20:01 by seonhjeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -384,7 +384,6 @@ public:
 		}
 	};
 
-
 	// Returns the allocator associated with the container.
 	allocator_type get_allocator() const { return this->_alloc; };
 };
@@ -428,6 +427,6 @@ void swap(vector< T, Alloc >& x, vector< T, Alloc >& y) {
 	x.swap(y);
 };
 
-}; // namespace ft
+} // namespace ft
 
 #endif

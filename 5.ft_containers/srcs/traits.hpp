@@ -6,7 +6,7 @@
 /*   By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 14:10:33 by seonhjeo          #+#    #+#             */
-/*   Updated: 2022/06/10 15:30:08 by seonhjeo         ###   ########.fr       */
+/*   Updated: 2022/06/16 17:04:12 by seonhjeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,6 @@ struct iterator_traits< T* const > {
 	typedef const T&					reference;
 };
 
-}
+} // namespace ft
 
 #endif

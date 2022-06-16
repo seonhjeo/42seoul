@@ -6,7 +6,7 @@
 /*   By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 11:10:59 by seonhjeo          #+#    #+#             */
-/*   Updated: 2022/06/16 01:48:49 by seonhjeo         ###   ########.fr       */
+/*   Updated: 2022/06/16 16:59:21 by seonhjeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ public:
 		}
 		~mapIterator() {}
 
-		/* const constructor */
+		/* copy constructor */
 		template <bool B>
 		mapIterator (const mapIterator<B> & x, typename ft::enable_if<!B>::type* = 0) {
 			_ptr = x.getPtr();
@@ -319,14 +319,15 @@ public:
 	void erase (iterator position) {
 		node* ptr = position.getPtr();
 
+		// if node has two children
 		if (ptr->left != _nil && ptr->right != _nil) {
 			position--;
 			this->_swap_nodes(ptr, position.getPtr());
 			this->erase(ptr);
 		}
+		// if node has one or no child
 		else {
 			node* child = (ptr->left != _nil) ? ptr->left : ptr->right;
-
 			if (child != _nil)
 				child->parent = ptr->parent;
 			if (ptr->parent->left == ptr)
@@ -337,7 +338,6 @@ public:
 			this->_removeNode(ptr, child);
 		}
 	}
-
 	// Removes the element (if one exists) with the key equivalent to key
 	size_type erase (const key_type & k) {
 		if (this->count(k))
@@ -494,7 +494,7 @@ private:
 		_alloc.construct(ptr, tmp);
 	}
 
-	// swap nodes ???
+	// swap nodes position
 	void _swap_nodes (node* a, node* b) {
 		if (a->left != b && a->left != _nil)
 			a->left->parent = b;
@@ -517,6 +517,7 @@ private:
 			else
 				b->parent->right = a;
 		}
+		
 		if (a->parent == b)
 			a->parent = a;
 		if (a->left == b)
@@ -541,7 +542,7 @@ private:
 			_nil->right = a;
 	}
 
-	// ???
+	// remove and destroy node 'ptr'
 	void _removeNode (node* ptr, node* child)
 	{
 		this->_deleteRB(ptr, child);
@@ -603,10 +604,14 @@ private:
 		node* grandparent = parent->parent;
 		node* uncle = (grandparent->right == parent) ? grandparent->left : grandparent->right;
 
+		// if x is root node
 		if (parent == _nil)
 			x->color = BLACK_;
+		// if parent is black
 		else if (parent->color == BLACK_)
 			return ;
+		// recoloring
+		// recursively do fixing with grandparent
 		else if (uncle->color == RED_)
 		{
 			parent->color = BLACK_;
@@ -614,20 +619,26 @@ private:
 			grandparent->color = RED_;
 			this->_insertRB(grandparent);
 		}
+		// restructing (search wikipedia)
+		// rotate nodes and change color
 		else if (uncle->color == BLACK_)
 		{
 			if (grandparent->left->left == x || grandparent->right->right == x)
 			{
+				// fifth
 				if (grandparent->left->left == x)
 					this->_LL(grandparent, parent);
+				// fifth-reverse
 				else if (grandparent->right->right == x)
 					this->_RR(grandparent, parent);
 				ft::swap(grandparent->color, parent->color);
 			}
 			else
 			{
+				// fourth
 				if (grandparent->left->right == x)
 					this->_LR(grandparent, parent, x);
+				//fourth-reverse
 				else if (grandparent->right->left == x)
 					this->_RL(grandparent, parent, x);
 				ft::swap(grandparent->color, x->color);
@@ -635,7 +646,7 @@ private:
 		}
 	}
 
-	// ???
+	// delete node with rule of RBTree
 	void _deleteRB (node* v, node* u)
 	{
 		if (v->color == RED_ || u->color == RED_)
@@ -644,7 +655,6 @@ private:
 			this->_doubleBlack(u, v->parent);
 	}
 
-	// ???
 	void _doubleBlack (node* u, node* parent)
 	{
 		node* sibling = (parent->left != u) ? parent->left : parent->right;
@@ -686,6 +696,7 @@ private:
 		}
 	}
 
+	// rotate nodes
 	void _LL (node* grandparent, node* parent)
 	{
 		if (grandparent->parent->right == grandparent)

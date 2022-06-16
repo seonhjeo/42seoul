@@ -6,7 +6,7 @@
 /*   By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 17:31:45 by seonhjeo          #+#    #+#             */
-/*   Updated: 2022/06/14 15:31:10 by seonhjeo         ###   ########.fr       */
+/*   Updated: 2022/06/16 17:04:19 by seonhjeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -203,6 +203,6 @@ bool lexicographical_compare(InputIterator1 first1, InputIterator1 last1,
 	return (first2 != last2);
 };
 
-}
+} // namespace ft
 
 #endif

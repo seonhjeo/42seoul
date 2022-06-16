@@ -6,7 +6,7 @@
 /*   By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/06 13:47:14 by seonhjeo          #+#    #+#             */
-/*   Updated: 2022/06/07 17:33:47 by seonhjeo         ###   ########.fr       */
+/*   Updated: 2022/06/16 17:04:33 by seonhjeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,6 @@ typename random_access_iterator< T1 >::difference_type operator-(
 	return lhs.base() - rhs.base();
 };
 
-}
+} // namespace ft
 
 #endif
