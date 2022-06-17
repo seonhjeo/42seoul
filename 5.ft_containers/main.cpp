@@ -1,16 +1,16 @@
 #include <iostream>
 #include <string>
 #include <deque>
-#if 1 //CREATE A REAL STL EXAMPLE
-	#include <map>
-	#include <stack>
-	#include <vector>
-	namespace ft = std;
-#else
+//#if 1 //CREATE A REAL STL EXAMPLE
+//	#include <map>
+//	#include <stack>
+//	#include <vector>
+//	namespace ft = std;
+//#else
 	#include "./srcs/map.hpp"
 	#include "./srcs/stack.hpp"
 	#include "./srcs/vector.hpp"
-#endif
+//#endif
 
 #define COUNT 100 // (MAX_RAM / (int)sizeof(Buffer))
 

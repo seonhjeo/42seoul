@@ -6,7 +6,7 @@
 /*   By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:51:17 by seonhjeo          #+#    #+#             */
-/*   Updated: 2022/06/16 21:36:46 by seonhjeo         ###   ########.fr       */
+/*   Updated: 2022/06/17 16:17:23 by seonhjeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -182,57 +182,86 @@ typename reverse_iterator< Iterator1 >::difference_type operator-(
 	const reverse_iterator< Iterator2 >& rhs) {
   return (rhs.base() - lhs.base());
 };
+// reverse_iterator
 
-	//////////////////////////////
-	// Reverse iterator
-	//////////////////////////////
 
-	template <class it>
-	class rev_map_iterator {
-	public:
-		// -structors
-		rev_map_iterator			(void)												{ _it = it(); }
-		rev_map_iterator			(typename it::value_type * ptr)						{ _it = it(ptr); }
-		rev_map_iterator			(const it & x)										{ _it = x; --_it; }
-		~rev_map_iterator			(void)												{}
-		// Conversion
-		template <class U>			friend class										rev_map_iterator;
-		template <class U>
-		rev_map_iterator			(const rev_map_iterator<U> & x)						{ _it = x.getIt(); }
+template <class it>
+class rev_map_iterator
+{
+public:
+	/* constructor, destructor */
+	rev_map_iterator() {
+		_it = it();
+	}
+	rev_map_iterator(typename it::value_type* ptr){
+		_it = it(ptr);
+	}
+	rev_map_iterator(const it& x){
+		_it = x;
+		--_it;
+	}
+	~rev_map_iterator()	{}
 
-		// Assignment
-		rev_map_iterator &			operator=	(const rev_map_iterator & x)			{ _it = x.getIt(); return (*this); }
-		rev_map_iterator &			operator+=	(int n)									{ _it -= n; return (*this); }
-		rev_map_iterator &			operator-=	(int n)									{ _it += n; return (*this); }
-		// Comparison
-		template <class U> bool		operator==	(const rev_map_iterator<U> & x) const	{ return (_it == x.getIt()); }
-		template <class U> bool		operator!=	(const rev_map_iterator<U> & x) const	{ return (_it != x.getIt()); }
-		template <class U> bool		operator<	(const rev_map_iterator<U> & x) const	{ return (_it > x.getIt()); }
-		template <class U> bool		operator>	(const rev_map_iterator<U> & x) const	{ return (_it < x.getIt()); }
-		template <class U> bool		operator<=	(const rev_map_iterator<U> & x) const	{ return (_it >= x.getIt()); }
-		template <class U> bool		operator>=	(const rev_map_iterator<U> & x) const	{ return (_it <= x.getIt()); }
-		// -crementation
-		rev_map_iterator &			operator++	(void)									{ --_it; return (*this); }
-		rev_map_iterator &			operator--	(void)									{ ++_it; return (*this); }
-		rev_map_iterator			operator++	(int)									{ rev_map_iterator<it> x(*this); --_it; return (x); }
-		rev_map_iterator			operator--	(int)									{ rev_map_iterator<it> x(*this); ++_it; return (x); }
-		// Operation
-		rev_map_iterator			operator+	(int n) const							{ return (_it - n + 1); }
-		rev_map_iterator			operator-	(int n) const							{ return (_it + n + 1); }
-		std::ptrdiff_t				operator-	(const rev_map_iterator & x) const		{ return (x.getIt() - _it); }
-		// Dereference
-		typename it::value_type &	operator[]	(size_t n) const						{ return (*(_it - n)); }
-		typename it::value_type &	operator*	(void) const							{ return (*_it); }
-		typename it::value_type *	operator->	(void) const							{ return (&(*_it)); }
-		// Member functions
-		it							base		(void)									{ return (++it(_it)); }
-		it							getIt		(void) const							{ return (_it); }
-		// Non-member functions
-		friend rev_map_iterator		operator+	(int n, const rev_map_iterator & x)		{ return (x.getIt() - n + 1); }
+	/* Conversion */
+	template <class U>
+	rev_map_iterator(const rev_map_iterator<U>& x){
+		_it = x.getIt();
+	}
 
-	private:
-		it		_it;
-	};
+	/* Assignment */
+	rev_map_iterator &operator=(const rev_map_iterator& x) {
+		_it = x.getIt(); return (*this);
+	}
+
+	/* Comparison */
+	template <class U>
+	bool operator==(const rev_map_iterator<U>& x) const {
+		return (_it == x.getIt());
+	}
+	template <class U>
+	bool operator!=(const rev_map_iterator<U>& x) const {
+		return (_it != x.getIt());
+	}
+
+	/* incrementation, decrementation */
+	rev_map_iterator &operator++() {
+		--_it;
+		return (*this);
+	}
+	rev_map_iterator &operator--() {
+		++_it;
+		return (*this);
+	}
+	rev_map_iterator operator++(int) {
+		rev_map_iterator<it> x(*this);
+		--_it;
+		return (x);
+	}
+	rev_map_iterator operator--(int) {
+		rev_map_iterator<it> x(*this);
+		++_it;
+		return (x);
+	}
+
+	/* Dereference */
+	typename it::value_type &operator[](size_t n) const {
+		return (*(_it - n));
+	}
+	typename it::value_type &operator*() const {
+		return (*_it);
+	}
+	typename it::value_type *operator->() const {
+		return (&(*_it));
+	}
+
+	/* Member functions */
+	it base() { return (++it(_it)); }
+	it getIt() const { return (_it); }
+
+private:
+	it		_it;
+}; // rev_map_iterator
+
 } // namespace ft
 
 #endif
