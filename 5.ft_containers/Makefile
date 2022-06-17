@@ -6,7 +6,7 @@
 #    By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/05/19 12:07:16 by seonhjeo          #+#    #+#              #
-#    Updated: 2022/05/19 12:07:36 by seonhjeo         ###   ########.fr        #
+#    Updated: 2022/06/17 14:49:37 by seonhjeo         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME =		ft_containers
 
 CPP = 		c++
 
-CPPFLAGS =	-std=c++98 -Wall -Wextra -Werror
+CPPFLAGS =	-std=c++98 -Wall -Wextra -Werror -g
 
 SRCS =		main.cpp \
 

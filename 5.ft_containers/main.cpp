@@ -1,16 +1,18 @@
 #include <iostream>
 #include <string>
 #include <deque>
-//#if 1 //CREATE A REAL STL EXAMPLE
-//	#include <map>
-//	#include <stack>
-//	#include <vector>
-//	namespace ft = std;
-//#else
+#if 1 //CREATE A REAL STL EXAMPLE
+	#include <map>
+	#include <stack>
+	#include <vector>
+	namespace ft = std;
+#else
 	#include "./srcs/map.hpp"
 	#include "./srcs/stack.hpp"
 	#include "./srcs/vector.hpp"
-//#endif
+#endif
+
+#define COUNT 100 // (MAX_RAM / (int)sizeof(Buffer))
 
 #include <stdlib.h>
 
@@ -22,16 +24,13 @@ struct Buffer
 	char buff[BUFFER_SIZE];
 };
 
-
-#define COUNT 100//(MAX_RAM / (int)sizeof(Buffer))
-
 template<typename T>
 class MutantStack : public ft::stack<T>
 {
 public:
 	MutantStack() {}
 	MutantStack(const MutantStack<T>& src) { *this = src; }
-	MutantStack<T>& operator=(const MutantStack<T>& rhs) 
+	MutantStack<T>& operator=(const MutantStack<T>& rhs)
 	{
 		this->c = rhs.c;
 		return *this;
@@ -87,7 +86,7 @@ int main(int argc, char** argv) {
 	{
 		//NORMAL ! :P
 	}
-	
+
 	for (int i = 0; i < COUNT; ++i)
 	{
 		map_int.insert(ft::make_pair(rand(), rand()));

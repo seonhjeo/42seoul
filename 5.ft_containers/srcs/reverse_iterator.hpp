@@ -6,12 +6,12 @@
 /*   By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/02 16:51:17 by seonhjeo          #+#    #+#             */
-/*   Updated: 2022/06/14 15:41:45 by seonhjeo         ###   ########.fr       */
+/*   Updated: 2022/06/16 21:36:46 by seonhjeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_REVERSE_ITERATOR_HPP
-# define FT_REVERSE_ITERATOR_HPP
+#ifndef REVERSE_ITERATOR_HPP
+# define REVERSE_ITERATOR_HPP
 
 # include "traits.hpp"
 # include "utility.hpp"

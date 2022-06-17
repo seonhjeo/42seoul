@@ -6,7 +6,7 @@
 /*   By: seonhjeo <seonhjeo@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/06/08 11:10:59 by seonhjeo          #+#    #+#             */
-/*   Updated: 2022/06/16 16:59:21 by seonhjeo         ###   ########.fr       */
+/*   Updated: 2022/06/17 12:29:10 by seonhjeo         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,13 +230,14 @@ public:
 
 
 	/* assignment operator */
-	map & operator= (const map & x) {
+	map& operator= (const map & x) {
 		if (this == &x)
 			return (*this);
 
 		this->clear();
 		_alloc = x._alloc;
 		_comp = x._comp;
+		this->_new_nil_node();
 
 		for (const_iterator it = x.begin() ; it != x.end() ; it++)
 			this->insert(*it);
@@ -517,7 +518,7 @@ private:
 			else
 				b->parent->right = a;
 		}
-		
+
 		if (a->parent == b)
 			a->parent = a;
 		if (a->left == b)
@@ -659,7 +660,7 @@ private:
 	{
 		node* sibling = (parent->left != u) ? parent->left : parent->right;
 
-		if (u == _nil->right)
+		if (u == _nil->right || u == _nil)
 			return ;
 		else if (sibling->color == BLACK_ && (sibling->left->color == RED_ || sibling->right->color == RED_))
 		{
