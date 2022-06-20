@@ -12,8 +12,6 @@
 	#include "./srcs/vector.hpp"
 //#endif
 
-#define COUNT 100 // (MAX_RAM / (int)sizeof(Buffer))
-
 #include <stdlib.h>
 
 #define MAX_RAM 4294967296
@@ -23,6 +21,8 @@ struct Buffer
 	int idx;
 	char buff[BUFFER_SIZE];
 };
+
+#define COUNT 10000 //(MAX_RAM / (int)sizeof(Buffer))
 
 template<typename T>
 class MutantStack : public ft::stack<T>
