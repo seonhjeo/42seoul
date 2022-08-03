@@ -1,292 +1,275 @@
-#include <unistd.h>
-#include <stdlib.h>
 #include <stdarg.h>
-#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
 
-typedef struct	s_info
+typedef struct s_list
 {
-	int			minus;
-	int			prec;
-	int			width;
-	char		conv;
-	int			nbr_sign;
-	int			nbr_base;
-}				t_info;
+	int width;
+	int point;
+	int precis;
+} t_list;
 
-int		is_conv(char c)
+t_list init_struct(t_list flags)
 {
-	if (c == 's' || c == 'd' || c == 'x')
-		return (1);
-	return (0);
+	flags.width = 0;
+	flags.point = 0;
+	flags.precis = 0;
+	return (flags);
 }
 
-int		is_digit(char c)
+int ft_isdigit(char c)
 {
-	if (c >= '0' && c <= '9')
-		return (1);
-	return (0);
+	return (c >= '0' && c <= '9');
 }
 
-int		ft_strlen(char *s)
+int is_spec(char c)
 {
-	int		i;
+	return (c == 's' || c == 'd' || c == 'x');
+}
 
-	i = 0;
-	while (s[i])
+t_list pars_flags(t_list flags, char *str)
+{
+	int i = 0;
+
+	while (str[i] && (is_spec(str[i]) == 0))
+	{
+		if (ft_isdigit(str[i]) && flags.point == 0)
+			flags.width = (flags.width * 10) + (str[i] - '0');
+		else if (str[i] == '.' && flags.point == 0)
+			flags.point = 1;
+		else if (ft_isdigit(str[i]) && flags.point == 1)
+			flags.precis = (flags.precis * 10) + (str[i] - '0');
+		i++;
+	}
+	return (flags);
+}
+
+int check_size(int number)
+{
+	unsigned int num;
+	int count = 0;
+
+	if (number == 0)
+		return (1);
+	if (number < 0)
+	{
+		count++;
+		num = number * (-1);
+	}
+	else
+		num = number;
+	while (num > 0)
+	{
+		count++;
+		num /= 10;
+	}
+	return (count);
+}
+
+int ft_strlen (char *str)
+{
+	int i = 0;
+
+	while (str[i])
 		i++;
 	return (i);
 }
 
-int		ft_putchar(char c)
+char *get_num(int number, int size)
 {
-	write(1, &c, 1);
-	return (1);
-}
+	unsigned num;
+	char *str;
 
-int		ft_putstr(char *s)
-{
-	int		len;
-	
-	len = ft_strlen(s);
-	write (1, &s, len);
-	return (len);
-}
-
-char	*ft_strdup(char *s)
-{
-	char	*res;
-	int 	len;
-	int		i;
-	
-	len = ft_strlen(s);
-	if (!(res = (char *)malloc(sizeof(char) * (len + 1))))
-		return (NULL);
-	while (i < len)
+	str = (char *)malloc(sizeof(char) * (size + 1));
+	str[size] = '\0';
+	if (number == 0)
 	{
-		res[i] = s[i];
-		i++;
+		str[0] = '0';
+		return (str);
 	}
-	res[i] = '\0';
-	return (res);
-}
-
-void	init_info(t_info *info)
-{
-	info->minus = 0;
-	info->prec = -1;
-	info->width = 0;
-	info->conv = 0;
-	info->nbr_sign = 1;
-	info->nbr_base = 10;
-}
-
-void	check_info(t_info *info, char c)
-{
-	if (c == '-' && info->width == 0 && info->prec == -1)
-		info->minus = 1;
-	if (info->prec == -1 && is_digit(c))
-		info->width = info->width * 10 + (c - '0');
-	if (c == '.')
-		info->prec = 0;
-	if (info->prec == 0 && is_digit(c))
-		info->prec = info->prec * 10 + (c - '0');
-}
-
-char	*get_base_str(t_info *info)
-{
-	if (info->nbr_base == 10)
-		return ("0123456789");
-	else if (info->nbr_base == 16)
-		return ("0123456789abcdef");
+	if (number < 0)
+		num = number * (-1);
 	else
-		return (NULL);
-}
-
-int		get_nbr_length(unsigned int n, t_info *info)
-{
-	int 	res;
-
-	res = 0;
-	if (n == 0)
-		res = 1;
+		num = number;
+	while (--size > 0)
+	{
+		str[size] = (num % 10) + '0';
+		num /= 10;
+	}
+	if (number < 0)
+		str[size] = '-';
 	else
-	{
-		while (n > 0)
-		{
-			n /= info->nbr_base;
-			res++;
-		}
-	}
-	return (res);
+		str[size] = (num % 10) + '0';
+	return (str);
 }
 
-int		add_prec_nbr(char **nbr, t_info *info)
+int print_width(int size, char c)
 {
-	char		*temp;
-	int 		len;
-	int			i;
-	int			j;
-	
-	len = ft_strlen(nbr);
-	if (info->prec > len)
+	int count = 0;
+
+	while (count < size)
 	{
-		if (!(temp == (char *)malloc(sizeof(char) * (info->prec + 1))))
-			return (NULL);
-		i = 0;
-		while (i < info->prec - len)
-			temp[i++] = '0';
-		j = 0;
-		while (nbr[j])
-			temp[i++] = nbr[j++];
-		temp[i] = '\0';
-		len = info->prec;
-		free(*nbr);
-		return (temp);
+		write(1, &c, 1);
+		count++;
 	}
-	return (nbr);
+	return (count);
 }
 
-int		add_width_nbr(char **nbr, t_info *info)
+int ft_putstr(char *str, int size)
 {
-	char		*temp;
-	int			len;
-	int			i;
-	int			j;
-
-	len = ft_strlen(nbr);
-	if (info->width > len)
-	{
-		if (!(temp = (char *)malloc(sizeof(char) * (info->width + 1))))
-			return (NULL);
-		i = 0;
-		j = 0;
-		if (info->minus == 0)
-		{
-			while (i < info->width - len)
-				temp[i++] = ' ';
-			while (nbr[j])
-				temp[i++] = nbr[j++];
-		}
-		else if (info->minus == 1)
-		{
-			while (nbr[j])
-				temp[i++] = nbr[j++];
-			while (i < info->width)
-				temp[i++] = ' ';
-		}
-		else
-			return (NULL);
-		temp[i] = '\0';
-		printf("temp : [%s]\n", temp);
-		len = info->width;
-		free(*nbr);
-		return (temp);
-	}
-	return (nbr);
+ 	    int count = 0;
+ 
+ 	    while (count < size)
+	    {
+	        write(1, &str[count], 1);
+	        count++;
+	    }
+	 return (count);
 }
 
-int		print_nbr(int n, t_info *info)
+int print_int(t_list flags, va_list value)
 {
-	char			*res;
-	int				len;
-	unsigned int	num;
-	int				i;
+	int count = 0;
+	int number;
+	char *str;
+	int size;
 
-	len = 0;
-	if (n < 0)
+	number = va_arg(value, int);
+	size = check_size(number);
+	str = get_num(number, size);
+	if (flags.precis == 0 && flags.point == 1 && number == 0)
 	{
-		info->nbr_sign = -1;
-		num = n * -1;
-		len += 1;
+		free(str);
+		str = "";
 	}
-	else
-		num = n;
-	len += get_nbr_length(num, info);
-	res = (char *)malloc(sizeof(char) * (len + 1));
-	res[len] = '\0';
-	i = len - 1;
-	while (num > 0)
-	{
-		res[i] = get_base_str(info)[num % info->nbr_base];
-		num /= info->nbr_base;
-		i--;
-	}
-	if (info->nbr_sign == -1)
-		res[0] = '-';
-	printf("semic : %s\n", res);
-	res = add_prec_nbr(res, info);
-	res = add_width_nbr(res, info);
-	len = ft_putstr(res);
-	return (len);
+	size = ft_strlen(str);
+	if (number < 0)
+		size--;
+	count += print_width(flags.width - ((flags.precis > size ? ((number < 0) ? (flags.precis + 1) : flags.precis) : ((number < 0) ? (size + 1) : size))), ' ');
+	if (number < 0)
+		count += print_width(1, '-');
+	count += print_width(flags.precis - size, '0');
+	count += ft_putstr(((number < 0) ? &str[1] : &str[0]), size);
+	if (!(flags.precis == 0 && flags.point == 1 && number == 0))
+		free(str);
+	return (count);
 }
 
-int		print_str(char *str, t_info *info)
+int print_str(t_list flags, va_list value)
 {
-	return (0);
-}
+	char *str;
+	int size;
+	int count = 0;
 
-int		ft_print_ap(va_list ap, t_info *info)
-{
-	int		res;
-
-	res = 0;
-	if (info->conv == 'd')
-		res += print_nbr(va_arg(ap, int), info);
-	else if (info->conv == 'x')
-	{
-		info->nbr_base = 16;
-		res += print_nbr(va_arg(ap, int), info);
-	}
-	else if (info->conv == 's')
-		res += print_str(va_arg(ap, char *), info);
-	else
-		return (-1);
-	return (res);
-}
-
-int		ft_printf_init(const char *str, va_list ap)
-{
-	t_info	*info;
-	int		res;
-	int		i;
-
+	str = va_arg(value, char *);
 	if (!str)
-		return (-1);
-	info = (t_info*)malloc(sizeof(t_info));
-	res = 0;
-	i = 0;
+		str = "(null)";
+	if (flags.precis == 0 && flags.point == 1)
+		str = "";
+	size = ft_strlen(str);
+	count += print_width(flags.width - ((flags.precis > 0 && flags.precis < size) ? flags.precis : size), ' ');
+	count += ft_putstr(str, ((flags.precis > 0 && flags.precis < size) ? flags.precis : size));
+	return (count);
+}
+
+int check_long(unsigned long long number)
+{
+	int count = 0;
+
+	while (number > 0)
+	{
+		count++;
+		number /= 16;
+	}
+	return (count);
+}
+
+char *get_long(unsigned int number)
+{
+	char *str;
+	int size;
+	char *array_hex = "0123456789abcdef";
+
+	size = check_long(number);
+	str = (char *)malloc(sizeof(char) * (size + 1));
+	str[size] = '\0';
+	if (number == 0)
+	{
+		str[0] = '0';
+		return (str);
+	}
+	while (--size > 0)
+	{
+		str[size] = array_hex[number % 16];
+		number /= 16;
+	}
+	if (size == 0)
+		str[size] = array_hex[number % 16];
+	return (str);
+}
+
+int print_xxx(t_list flags, va_list value)
+{
+	int count = 0;
+	int size;
+	char *str;
+	unsigned int number;
+
+	number = va_arg(value, unsigned int);
+	str = get_long(number);
+	if (flags.precis == 0 && flags.point == 1 && number == 0)
+	{
+		free(str);
+		str = "";
+	}
+	size = ft_strlen(str);
+	count += print_width(flags.width - ((flags.precis > size) ? flags.precis : size), ' ');
+	count += print_width(flags.precis - size, '0');
+	count += ft_putstr(str, size);
+	if (!(flags.precis == 0 && flags.point == 1 && number == 0))
+		free(str);
+	return (count);
+}
+
+int 	sort_spec(char c, t_list flags, va_list value)
+{
+	int count = 0;
+
+	if (c == 'd')
+		count += print_int(flags, value);
+	if (c == 's')
+		count += print_str(flags, value);
+	if (c == 'x')
+		count += print_xxx(flags, value);
+	return (count);
+}
+
+int ft_printf(char *str, ...)
+{
+	int count = 0;
+	va_list value;
+	int i = 0;
+	t_list flags;
+
+	va_start(value, str);
 	while (str[i])
 	{
 		if (str[i] == '%')
 		{
-			init_info(info);
-			while (!is_conv(str[i]) && str[i])
-			{
-				check_info(info, str[i]);
+			i++;
+			flags = init_struct(flags);
+			flags = pars_flags(flags, &str[i]);
+			while (is_spec(str[i]) == 0)
 				i++;
-			}
-			if (str[i] == '\0')
-				return (-1);
-			else
-				info->conv = str[i];
-			res += ft_print_ap(ap, info);
+			count += sort_spec(str[i], flags, value);
 		}
 		else
-			res += ft_putchar(str[i]);
+		{
+			write(1, &str[i], 1);
+			count++;
+		}
 		i++;
 	}
-	return (res);
-}
-
-int		ft_printf(const char *str, ...)
-{
-	va_list		ap;
-	int			res;
-
-	if (!str)
-		return (-1);
-	va_start(ap, str);
-	res = ft_printf_init(str, ap);
-	va_end(ap);
-	return (res);
+	va_end(value);
+	return (count);
 }

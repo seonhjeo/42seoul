@@ -1,4 +1,4 @@
-gcc myinter.c -o inter -Wall -Wextra -Werror
+gcc inter.c -o inter -Wall -Wextra -Werror
 ./inter "padinton" "qefwpatdjetyiytjneytjoeyjnejeyj" | cat -e
 echo "  ANSWER: padinto$"
 ./inter ddf6vewg64f gtwthgdwthdwfteewhrtag6h4ffdhsd | cat -e

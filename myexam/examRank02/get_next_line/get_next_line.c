@@ -1,133 +1,120 @@
 #include "get_next_line.h"
 
-int		ft_strlen(char *s)
+int     ft_strlen(char *str)
 {
-	int		i;
+    int	i;
 
 	i = 0;
-	while (s[i])
+	if (!str)
+		return (0);
+	while (str[i])
 		i++;
 	return (i);
 }
 
-int		is_newline(char *s)
+char    *ft_strjoin(char *remains, char *buffer)
 {
-	int		i;
+    char *array;
+    unsigned int size;
+    int i;
+    int j;
 
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == '\0')
-			return (i);
-		i++;
-	}
-	return (-1);
+    if (!remains && !buffer)
+        return (NULL);
+    size = ft_strlen(remains) + ft_strlen(buffer);
+    if (!(array = (char *)malloc(sizeof(char) * (size + 1))))
+        return (NULL);
+    i = 0;
+    j = 0;
+    if (remains)
+    {
+        while (remains[i])
+        {
+            array[j] = remains[i];
+            i++;
+            j++;
+        }
+        i = 0;
+    }
+    while (buffer[i])
+    {
+        array[j] = buffer[i];
+        i++;
+        j++;
+    }
+    array[size] = '\0';
+    free((void *)remains);
+    return (array);
 }
 
-char	*ft_strdup(char *str)
+char    *push_line(char *remains)
 {
-	char	*res;
-	int		len;
-	int		i;
+    int i;
+    char *array;
 
-	if (!str)
-		return (0);
-	len = ft_strlen(str);
-	if (!(res = (char *)malloc(sizeof(char) * (len + 1))))
-		return (0);
-	i = 0;
-	while (i < len)
-	{
-		res[i] = str[i];
-		i++;
-	}
-	res[len] = '\0';
-	return (res);
+    i = 0;
+    while (remains[i] && remains[i] != '\n')
+        i++;
+    if (!(array = (char *)malloc(sizeof(char) * (i + 1))))
+        return (NULL);
+    i = 0;
+    while (remains[i] && remains[i] != '\n')
+    {
+        array[i] = remains[i];
+        i++;
+    }
+    array[i] = '\0';
+    return (array);
 }
 
-char	*ft_strjoin(char *s1, char *s2)
+char    *cut_next_line(char *remains)
 {
-	char	*res;
-	int		len1;
-	int		len2;
-	int		i;
+    int i;
+    int j;
+    char *array;
 
-	if (!s1 && !s2)
-		return (0);
-	else if (!s1 || !s2)
-		return (!s1 ? ft_strdup(s2) : ft_strdup(s1));
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	if (!(res = (char *)malloc(sizeof(char) * (len1 + len2 + 1))))
-		return (0);
-	i = 0;
-	while (i < len1)
-	{
-		res[i] = s1[i];
-		i++;
-	}
-	i = 0;
-	while (i < len2)
-	{
-		res[len1 + i] = s2[i];
-		i++;
-	}
-	res[len1 + len2] = '\0';
-	free(s1);
-	return (res);
+    i = 0;
+    j = 0;
+    while (remains[i] && remains[i] != '\n')
+        i++;
+    if (!remains[i])
+    {
+        free(remains);
+        return (NULL);
+    }
+    if (!(array = (char *)malloc(sizeof(char) * (ft_strlen(remains) - i + 1))))
+        return (NULL);
+    i++;
+    while (remains[i])
+    {
+        array[j] = remains[i];
+        i++;
+        j++;
+    }
+    array[j] = '\0';
+    free(remains);
+    return (array);
 }
 
-int		split_line(char **backup, char **line, int newline)
+int     get_next_line(char **line)
 {
-	char	*temp;
-	int		len;
+    char buffer[BUFFER_SIZE + 1];
+    static char *remains;
+    int count;
+    int fd;
 
-	(*backup)[newline] = '\0';
-	*line = ft_strdup(*backup);
-	len = ft_strlen(*backup + newline + 1);
-	if (len == 0)
-	{
-		free(*backup);
-		*backup = 0;
-		return (1);
-	}
-	temp = ft_strdup(*backup + newline + 1);
-	free(*backup);
-	*backup = temp;
-	return (1);
-}
-
-int		return_all(char **backup, char **line, int read_size, int newline)
-{
-	if (read_size < 0)
-		return (-1);
-	if (*backup && newline >= 0)
-		return (split_line(backup, line, newline));
-	else if (*backup)
-	{
-		*line = *backup;
-		*backup = 0;
-		return (0);
-	}
-	*line = ft_strdup("");
-	return (0);
-}
-
-int		get_next_line(char **line)
-{
-	char		buf[BUFFER_SIZE + 1];
-	static char	*backup;
-	int			read_size;
-	int			newline;
-
-	if (!line)
-		return (-1);
-	while ((read_size = read(0, buf, BUFFER_SIZE)) > 0)
-	{
-		buf[read_size] = '\0';
-		backup = ft_strjoin(backup, buf);
-		if ((newline = is_newline(backup)) >= 0)
-			break ;
-	}
-	return (return_all(&backup, line, read_size, newline));
+    count = 1;
+    fd = 0;
+    if (!line)
+        return (-1);
+    while (buffer[0] != '\n' && count != 0)
+    {
+        if ((count = read(fd, buffer, BUFFER_SIZE)) == (-1))
+            return (-1);
+        buffer[count] = '\0';
+        remains = ft_strjoin(remains, buffer);
+    }
+    *line = push_line(remains);
+    remains = cut_next_line(remains);
+    return((count == 0) ? 0 : 1);
 }

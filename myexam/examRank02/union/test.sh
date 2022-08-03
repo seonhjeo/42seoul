@@ -1,4 +1,4 @@
-gcc myunion.c -o union -Wall -Wextra -Werror
+gcc union.c -o union -Wall -Wextra -Werror
 ./union zpadinton "paqefwtdjetyiytjneytjoeyjnejeyj" | cat -e
 echo "  ANSWER: zpadintoqefwjy$"
 ./union ddf6vewg64f gtwthgdwthdwfteewhrtag6h4ffdhsd | cat -e
